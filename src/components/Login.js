@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from './Header'
 
 const Login = () => {
+
+  const [IsSignInForm, setIsSignInForm] = useState(true);
+  const toggleSignInForm = () => {
+    setIsSignInForm(!IsSignInForm);
+  }
   return (
     <div>
         < Header />
@@ -10,10 +15,12 @@ const Login = () => {
         alt = "logo" />
         </div>
       <form className="w-3/12 p-12 absolute bg-black my-36 mx-auto left-0 right-0 text-white bg-opacity-85">
-        <h1 className="font-bold text-4xl py-4"> Sign In</h1>
-        <input type="text" placeholder="Email Address" className="p-4 my-3 w-full rounded-md bg-black text-xl border from-black" />
-        <input type="password" placeholder="Password" className="p-4 my-3 w-full rounded-md  bg-black text-xl border from-black" />
-        <button className="p-4 my-6 bg-red-700 text-white rounded-md w-full"> Sign In </button>
+        <h1 className="font-bold text-4xl py-4"> {IsSignInForm ? "Sign In" : "Sign Up" }</h1>
+        {!IsSignInForm && (<input type="text" placeholder="Full Name" className="p-4 my-3 w-full rounded-md bg-black text-xl border from-black focus:outline-none focus:border-4 focus:border-blue-700" />) }
+        <input type="text" placeholder="Email Address" className="p-4 my-3 w-full rounded-md bg-black text-xl border from-black focus:outline-none focus:border-4 focus:border-blue-700" />
+        <input type="password" placeholder="Password" className="p-4 my-3 w-full rounded-md  bg-black text-xl border from-black focus:outline-none focus:border-4 focus:border-blue-700" />
+        <button className="p-4 my-6 bg-red-700 text-white rounded-md w-full hover:bg-red-900 shadow-md transition duration-300 ease-in-out">  {IsSignInForm ? "Sign In" : "Sign Up" } </button>
+        <p className = "cursor-pointer" onClick={toggleSignInForm}> {IsSignInForm ? "Are you new to Neflix? Sign Up Now" : "Already Registered ? Sign In Now." }</p>
       </form>
     </div>
   )

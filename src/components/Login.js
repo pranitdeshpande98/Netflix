@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react'
 import Header from './Header'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../utils/firebase';
 import { checkValidData} from "../utils/validate";
 const Login = () => {
 
@@ -13,6 +15,40 @@ const Login = () => {
     const message = checkValidData(email.current.value, password.current.value);
     seterrorMessage(message);
     //THen I can proceed with sing in and signup
+
+    if (message) return;
+    // other wise sign signup user
+
+    if(!IsSignInForm){
+        //Sign Up Login
+        createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          // Signed up 
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          seterrorMessage(errorCode+"-"+errorMessage);
+        });
+
+    }
+    else{
+        signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+          .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            console.log(user);
+            // ...
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            seterrorMessage(errorCode+"-"+errorMessage);
+          });
+            }
   }
   const resetForm = () => {
     email.current.value = '';
@@ -41,7 +77,14 @@ const Login = () => {
         <button className="p-4 my-6 bg-red-700 text-white rounded-lg w-full hover:bg-red-900 shadow-md transition duration-300 ease-in-out" onClick={handleButtonClick}>  
           {IsSignInForm ? "Sign In" : "Sign Up" } 
         </button>
-        <p className = "cursor-pointer" onClick={toggleSignInForm}> {IsSignInForm ? "Are you new to Neflix? Sign Up Now" : "Already Registered ? Sign In Now." }</p>
+        <p className="cursor-pointer text-xl" onClick={toggleSignInForm}>
+  {IsSignInForm ? "Are you new to Netflix? " : "Already Registered? "}
+  <span className="font-bold text-xl underline">
+    {IsSignInForm ? "Sign Up Now" : "Sign In Now"}
+  </span>
+  .
+</p>
+
       </form>
     </div>
   )

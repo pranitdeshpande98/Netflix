@@ -1,16 +1,20 @@
 import React, { useRef, useState } from 'react'
 import Header from './Header'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../utils/firebase';
 import { checkValidData} from "../utils/validate";
+import { addUser } from '../utils/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 const Login = () => {
 
   const [IsSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, seterrorMessage] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const email = useRef(null);
   const password = useRef(null);
+  const name = useRef(null);
 
   const handleButtonClick = () => {
     // Validate the form data
@@ -27,8 +31,17 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up 
           const user = userCredential.user;
+                updateProfile(user, {
+                  displayName: name.current.value,
+                }).then(() => {
+                  const {uid, email, displayName} = auth.currentUser;
+                  dispatch(addUser({uid:uid, email:email, displayName:displayName}));
+                  navigate("/browse");
+                }).catch((error) => {
+                seterrorMessage(error.message);
+                });
+                
           console.log(user);
-          navigate("/browse");
           // ...
         })
         .catch((error) => {
@@ -74,16 +87,16 @@ const Login = () => {
         </div>
       <form onSubmit={(e) => e.preventDefault() } className="w-3/12 p-12 absolute bg-black my-36 mx-auto left-0 right-0 text-white bg-opacity-85">
         <h1 className="font-bold text-4xl py-4"> {IsSignInForm ? "Sign In" : "Sign Up" }</h1>
-        {!IsSignInForm && (<input type="text" placeholder="Full Name" className="p-4 my-3 w-full rounded-lg bg-black text-xl border from-black focus:outline-none focus:border-4 focus:border-blue-700" />) }
+        {!IsSignInForm && (<input type="text" placeholder="Full Name" ref={name}  className="p-4 my-3 w-full rounded-lg bg-black text-xl border from-black focus:outline-none focus:border-4 focus:border-blue-700" />) }
         <input type="text" ref = {email} placeholder="Email Address" className="p-4 my-3 w-full rounded-lg bg-black text-xl border from-black focus:outline-none focus:border-4 focus:border-blue-700" />
         <input type="password" ref={password} placeholder="Password" className="p-4 my-3 w-full rounded-lg  bg-black text-xl border from-black focus:outline-none focus:border-4 focus:border-blue-700" />
         <p className="text-red-600 text-x1 font-bold py-2"> {errorMessage} </p>
         <button className="p-4 my-6 bg-red-700 text-white rounded-lg w-full hover:bg-red-900 shadow-md transition duration-300 ease-in-out" onClick={handleButtonClick}>  
           {IsSignInForm ? "Sign In" : "Sign Up" } 
         </button>
-        <p className="cursor-pointer text-xl" onClick={toggleSignInForm}>
+        <p className="cursor-pointer" onClick={toggleSignInForm}>
   {IsSignInForm ? "Are you new to Netflix? " : "Already Registered? "}
-  <span className="font-bold text-xl underline">
+  <span className="font-bold underline">
     {IsSignInForm ? "Sign Up Now" : "Sign In Now"}
   </span>
   .

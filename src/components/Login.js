@@ -4,13 +4,12 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { auth } from '../utils/firebase';
 import { checkValidData} from "../utils/validate";
 import { addUser } from '../utils/userSlice';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { BG_IMAGE } from '../utils/constants';
 const Login = () => {
 
   const [IsSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, seterrorMessage] = useState(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const email = useRef(null);
   const password = useRef(null);
@@ -36,12 +35,10 @@ const Login = () => {
                 }).then(() => {
                   const {uid, email, displayName} = auth.currentUser;
                   dispatch(addUser({uid:uid, email:email, displayName:displayName}));
-                  navigate("/browse");
                 }).catch((error) => {
                 seterrorMessage(error.message);
                 });
                 
-          console.log(user);
           // ...
         })
         .catch((error) => {
@@ -56,8 +53,6 @@ const Login = () => {
           .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
-            console.log(user);
-            navigate("/browse");
             // ...
           })
           .catch((error) => {
@@ -82,7 +77,7 @@ const Login = () => {
     <div>
         < Header />
         <div className="w-screen h-screen flex justify-center items-center absolute">
-        <img className = "w-full h-full object-cover" src= "https://assets.nflxext.com/ffe/siteui/vlv3/31ef2c5c-3d08-47d5-b7a9-f29e4f4f893d/3152e5c9-a0d5-495b-ab03-073a70c5d268/US-en-20240506-POP_SIGNUP_TWO_WEEKS-perspective_WEB_34f5ff74-a994-4852-b27c-f4196ec21c67_small.jpg"
+        <img className = "w-full h-full object-cover" src= {BG_IMAGE}
         alt = "logo" />
         </div>
       <form onSubmit={(e) => e.preventDefault() } className="w-3/12 p-12 absolute bg-black my-36 mx-auto left-0 right-0 text-white bg-opacity-85">

@@ -20,3 +20,5 @@ export const SUPPORTED_LANGUAGES = [
   {identifier: "es", name:"Spanish"},
   {identifier: "mr", name:"Marathi"},
 ]
+
+

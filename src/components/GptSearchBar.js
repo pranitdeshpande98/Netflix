@@ -1,11 +1,23 @@
 import React, { useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import lang from '../utils/LanguageConstants';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { GEMINI_KEY } from '../utils/constants';
+import { API_OPTIONS, GEMINI_KEY } from '../utils/constants';
+import { json } from 'react-router-dom';
+import {addGPTMovieResult} from "../utils/GptSlice";
 
+
+ // For each movie I willsearch TMDB API
+
+ const searchMovieTMDB = async(movie) => {
+    const data = await fetch('https://api.themoviedb.org/3/search/movie?query='+ movie +'&include_adult=false&language=en-US&page=1', API_OPTIONS);
+    const json = await data.json();
+    return json.results;
+
+ }
 const GptSearchBar = () => {
 
+      const dispatch = useDispatch();
 
       const language = useSelector((store) => store.config.lang);
       const searchText = useRef(null);
@@ -18,7 +30,11 @@ const GptSearchBar = () => {
         const response = await result.response;
         const movie_list = response.text();
         const movies = movie_list.split(",")
-        console.log(movies);
+        
+        const promiseArray = movies.map((movie) => searchMovieTMDB(movie));
+        
+        const tmdbresults = await Promise.all(promiseArray);
+        dispatch(addGPTMovieResult({movieName: movies, movieResults: tmdbresults}));
       };
 
   return (

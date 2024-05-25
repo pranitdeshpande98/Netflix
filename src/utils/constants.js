@@ -10,7 +10,7 @@ export const IMG_CDN_URL = "https://image.tmdb.org/t/p/w500";
     method: 'GET',
     headers: {
       accept: 'application/json',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxY2IzNDY0YWYyNjg3OGYzOTM5OWU4YTEyMGMyYTMwYiIsInN1YiI6IjY2NDM3MmI3NTNjMmRjMTZiNjU5ZmVlMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ak4FrvC9rXfUJJl-e2AYh2IMkPGyMK4mhDoxOxQkcfI'
+      Authorization: 'Bearer '+process.env.REACT_APP_TMDB_KEY,
     }
   };
   
@@ -22,3 +22,4 @@ export const SUPPORTED_LANGUAGES = [
 ]
 
 
+export const GEMINI_KEY = process.env.REACT_APP_GEMINI_KEY;

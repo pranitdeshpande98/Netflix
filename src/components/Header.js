@@ -49,9 +49,9 @@ const handleLanguageChange = (e) => {
 }
 
   return (
-    <div className='absolute w-screen px-10 py-3 bg-gradient-to-b from-black z-10 flex justify-between'>
+    <div className='absolute w-screen px-10 py-3 bg-gradient-to-b from-black z-10 flex justify-between '>
         
-        <img className="w-44" 
+        <img className="w-44 " 
         src = {LOGO} alt="logo" />
         {user && <div className='flex p-2'>
           {showGptSearch && <select className='py-2 px-2 mt-4 bg-gray-900 text-white m-2' onChange={handleLanguageChange}>
